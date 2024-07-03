@@ -204,14 +204,53 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 ### Function `findAll()`
 #### **File** `\src\users\users.module.ts`
 ```
-import { UsersModule } from './users/users.module';
+import { User } from './entities/user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 ...
-imports: [
-  UsersModule,
-]
+@Module({
+imports: [TypeOrmModule.forFeature([User])],
+})
 ```
 #### **File** `\src\users\users.controller.ts`
+```
+@Get()
+findAll() {
+  return this.usersService.findAll();
+}
+```
 #### **File** `\src\users\users.service.ts`
+```
+import { User } from './entities/user.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+...
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
+...
+findAll(): Promise<User[]> {
+  return this.userRepository.find();
+}
+```
 #### **File** `\src\users\entities\user.entity.ts`
+```
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+
+@Entity()
+export class User {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ unique: true })
+  username: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+}
+```
 #### **File** `\src\users\dto\create-user.dto.ts`
 #### **File** `\src\users\dto\update-user.dto.ts`
