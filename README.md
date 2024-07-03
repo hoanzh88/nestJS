@@ -294,3 +294,49 @@ async remove(id: number): Promise<void> {
 }
 ```
 
+### Function `create()`
+#### **File** `\src\users\users.controller.ts`
+```
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import { CreateUserDto, createUserSchema  } from './dto/create-user.dto';
+...
+@Post()
+async create(@Body() createUserDto: CreateUserDto) {
+  const { error } = createUserSchema.validate(createUserDto);
+  if (error) {
+    throw new BadRequestException(error.details[0].message);
+  }
+  return this.usersService.create(createUserDto);
+}
+```
+
+#### **File** `\src\users\dto\create-user.dto.ts`
+```
+import * as Joi from 'joi';
+...
+export const createUserSchema = Joi.object({
+  username: Joi.string().alphanum().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
+
+export class CreateUserDto {}
+```
+
+#### **File** `\src\users\users.service.ts`
+```
+async create(createUserDto: CreateUserDto): Promise<User> {
+  const user = this.userRepository.create(createUserDto);
+  return this.userRepository.save(user);
+}
+```
+
+#### **POSTMAN**  test lại
+```
+-- post http://localhost:3000/users
+{
+  "username": "edit22",
+  "email": "edit22@example.com",
+  "password": "4333333"
+}
+```
