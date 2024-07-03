@@ -203,6 +203,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 ### Function `findAll()`
 #### **File** `\src\users\users.module.ts`
+```
+import { UsersModule } from './users/users.module';
+...
+imports: [
+  UsersModule,
+]
+```
 #### **File** `\src\users\users.controller.ts`
 #### **File** `\src\users\users.service.ts`
 #### **File** `\src\users\entities\user.entity.ts`
