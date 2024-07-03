@@ -254,3 +254,25 @@ export class User {
 ```
 #### **File** `\src\users\dto\create-user.dto.ts`
 #### **File** `\src\users\dto\update-user.dto.ts`
+
+### Function `findOne()`
+#### **File** `\src\users\users.controller.ts`
+```
+@Get(':id')
+findOne(@Param('id') id: string) {
+  return this.usersService.findOne(+id);
+}
+```
+#### **File** `\src\users\users.service.ts`
+```
+import { Injectable, NotFoundException } from '@nestjs/common';
+...
+async findOne(id: number): Promise<User> {
+  const user = await this.userRepository.findOne({ where: { id } });
+  if (!user) {
+    throw new NotFoundException(`User with id ${id} not found`);
+  }
+  return user;
+}
+```
+
