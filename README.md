@@ -340,3 +340,51 @@ async create(createUserDto: CreateUserDto): Promise<User> {
   "password": "4333333"
 }
 ```
+
+### Function `update()`
+#### **File** `\src\users\users.controller.ts`
+```
+-- change   Patch to Put
+import { Controller, Get, Post, Body, Put, Param, Delete, BadRequestException } from '@nestjs/common';
+....
+@Put(':id')
+update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  return this.usersService.update(+id, updateUserDto);
+}
+```
+
+#### **File** `\src\users\dto\update-user.dto.ts`
+```
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateUserDto } from './create-user.dto';
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {
+    username?: string;
+    email?: string;
+    password?: string;
+}
+```
+
+#### **File** `\src\users\users.service.ts`
+```
+async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  const user = await this.userRepository.preload({
+    id: id,
+    ...updateUserDto,
+  });
+  if (!user) {
+    throw new NotFoundException(`User with id ${id} not found`);
+  }
+  return this.userRepository.save(user);
+}
+```
+
+#### **POSTMAN**  test lại
+```
+-- put http://localhost:3000/users/6
+{
+  "username": "edit2-edit",
+  "email": "edit22-edit@example.com",
+  "password": "4333333"
+}
+```
