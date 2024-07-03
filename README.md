@@ -213,6 +213,7 @@ imports: [TypeOrmModule.forFeature([User])],
 ```
 #### **File** `\src\users\users.controller.ts`
 ```
+-- Lúc CLI generate đã có ( không thay đổi)
 @Get()
 findAll() {
   return this.usersService.findAll();
@@ -258,6 +259,7 @@ export class User {
 ### Function `findOne()`
 #### **File** `\src\users\users.controller.ts`
 ```
+-- Lúc CLI generate đã có ( không thay đổi)
 @Get(':id')
 findOne(@Param('id') id: string) {
   return this.usersService.findOne(+id);
@@ -273,6 +275,22 @@ async findOne(id: number): Promise<User> {
     throw new NotFoundException(`User with id ${id} not found`);
   }
   return user;
+}
+```
+### Function `remove()`
+#### **File** `\src\users\users.controller.ts`
+```
+-- Lúc CLI generate đã có ( không thay đổi)
+@Delete(':id')
+remove(@Param('id') id: string) {
+  return this.usersService.remove(+id);
+}
+```
+#### **File** `\src\users\users.service.ts`
+```
+async remove(id: number): Promise<void> {
+  const user = await this.findOne(id);
+  await this.userRepository.remove(user);
 }
 ```
 

@@ -32,7 +32,14 @@ export class UsersService {
     return `This action updates a #${id} user`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    const isDelete = await this.userRepository.remove(user);
+    if (!isDelete) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
   }
 }
